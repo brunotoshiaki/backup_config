@@ -1,0 +1,65 @@
+[
+  {
+    "src": "/etc/caddy/Caddyfile",
+    "dst": "caddy/Caddyfile",
+    "validate": "caddy"
+  },
+  {
+    "src": "/etc/hosts",
+    "dst": "hosts"
+  },
+  {
+    "src": "/etc/systemd/journald.conf",
+    "dst": "journald"
+  },
+  {
+    "src": "/etc/logrotate.d/logs/conf",
+    "dst": "logrotate"
+  },
+  {
+    "src": "/etc/NetworkManager/system-connections/watanabe_avelar.nmconnection",
+    "dst": "network"
+  },
+  {
+    "src": "/etc/ssh/sshd_config",
+    "dst": "ssh"
+  },
+  {
+    "src": "/var/www/html",
+    "dst": "www"
+  },
+  {
+    "src": "/www",
+    "dst": "www_root",
+    "method": "rsync"
+  },
+  {
+    "src": "/var",
+    "dst": "var",
+    "method": "rsync"
+  },
+  {
+    "src": "/home/pi/screenshot.sh",
+    "dst": "script"
+  },
+  {
+    "src": "/home/pi/.local/share/applications/screenshot.desktop",
+    "dst": "zenity"
+  },
+  {
+    "src": "/etc/apt/apt.conf.d/50unattended-upgrades",
+    "dst": "unattended_upgrades"
+  },
+  {
+    "src": "/etc/fail2ban/jail.local",
+    "dst": "fail2ban"
+  },
+  {
+    "src": "/home/pi/.zshrc",
+    "dst": "zsh"
+  },
+  {
+    "src": "/etc/default/ufw",
+    "dst": "ufw"
+  }
+]

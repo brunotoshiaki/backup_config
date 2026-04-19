@@ -1,50 +1,79 @@
 # backup_config
-Automated configuration backup tool that snapshots system files into a Git repository.
-Uses deterministic content hashing to detect changes, supports rsync for large trees, validates Caddyfiles before committing, and only commits when changes occur.
 
-Features
-Deterministic content hashing for files and directories
-Sync configured paths into a local git repo
-rsync support for large/complex trees
-Caddyfile validation before commit
-Minimal dependencies (pure Python + system rsync / git)
-Automated commits and optional ownership fix (chown)
-Requirements
-Python 3.8+
-git on PATH
-rsync installed if you use entries with "method": "rsync"
-caddy available only if you use Caddy validation
-Quick Start
-Copy this repository into your host or create a new repo and paste the files.
-Edit backup_paths.json to list the paths you want to back up.
-Run manually:
-Configuration
-Primary configuration: backup_paths.json — an array of objects with:
+Automated configuration backup tool for saving system files into a repository snapshot.
 
-src (string): absolute path to back up
-dst (string): relative destination path inside the git repo
-optional method: "rsync" to use rsync instead of copy
-optional validate: e.g. "caddy" to run Caddy validation on the destination file
-Example:
+It uses deterministic content hashing to detect changes, supports `rsync` for large directories, validates Caddyfiles before saving, and only creates a new snapshot when changes are found.
 
-Environment variables (optional):
+## Features
 
-BACKUP_GIT_PATH — path to local git repo (default: repository folder)
-BACKUP_HASH_FILE — path to store previous hashes (default: backup_hashes.json)
-BACKUP_LOG_FILE — path to log file (default: backup.log)
-BACKUP_CHOWN — user:group to chown -R the repo after commit (optional)
-Running as a Cron Job
-Example cron that runs every 6 hours (edit with crontab -e):
+- Deterministic hashing for files and directories
+- Backup of configured paths into the repository
+- Optional `rsync` support for large or complex trees
+- Optional Caddyfile validation before saving
+- Minimal dependencies: Python and common system tools
+- Optional ownership fix with `chown`
 
-Note: Backing up system paths like var or etc may require root permissions. Use sudo or a root cron if needed.
+## Requirements
 
-Tests
-To run unit tests (optional):
+- Python 3.8 or newer
+- `git` available on `PATH`
+- `rsync` installed if you use `"method": "rsync"`
+- `caddy` installed if you use Caddy validation
 
-Security & Best Practices
-Do NOT store secrets, private keys, or passwords in the git repository.
-Exclude sensitive paths using .gitignore or remove them from backup_paths.json.
-For sensitive data, consider encryption (git-crypt, GPG) or secure offsite backups.
-Limit who can read the git repo (permissions / private remote).
-Contributing
-Feel free to open issues or submit PRs. Keep changes focused and add tests for new behavior.
+## Quick Start
+
+1. Place the project files on the target machine.
+2. Edit `backup_paths.json` with the paths you want to back up.
+3. Run the backup script manually or with a scheduler.
+
+## Configuration
+
+The main configuration file is `backup_paths.json`.
+
+Each entry should include:
+
+- `src`: absolute path to back up
+- `dst`: relative destination path inside the repository
+- `method` *(optional)*: use `"rsync"` instead of a regular copy
+- `validate` *(optional)*: use `"caddy"` to validate the destination file
+
+### Example
+
+```json
+[
+  {
+    "src": "/etc/caddy/Caddyfile",
+    "dst": "etc/caddy/Caddyfile",
+    "validate": "caddy"
+  },
+  {
+    "src": "/etc/nginx",
+    "dst": "etc/nginx",
+    "method": "rsync"
+  }
+]
+```
+
+## Optional Environment Variables
+
+- `BACKUP_GIT_PATH`: path to the local repository (default: current repository folder)
+- `BACKUP_HASH_FILE`: path to the saved hash file (default: `backup_hashes.json`)
+- `BACKUP_LOG_FILE`: path to the log file (default: `backup.log`)
+- `BACKUP_CHOWN`: `user:group` value used with `chown -R` after backup
+
+## Scheduled Execution
+
+You can run the backup with any scheduler, such as cron or a systemd timer.
+
+> Backing up system paths like `/etc` or `/var` may require elevated permissions.
+
+## Security Notes
+
+- Do not store secrets, private keys, or passwords in the repository.
+- Exclude sensitive paths when needed.
+- Use encryption for sensitive backups when appropriate.
+- Restrict access to the backup repository.
+
+## Contributing
+
+Keep changes focused and update documentation when behavior changes.
